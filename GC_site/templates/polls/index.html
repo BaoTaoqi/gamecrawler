@@ -1,0 +1,19 @@
+{% extends 'public/base.html' %}
+{% load static %}
+{% block title %}投票{% endblock %}
+{% block content %}
+    {% if request.session.is_login or request.session.wx_is_login %}
+        <link rel="stylesheet" type="text/css" href="{% static 'polls/css/style.css' %}">
+        {% if latest_question_list %}
+            <ul>
+                {% for question in latest_question_list %}
+                    <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No polls are available.</p>
+        {% endif %}
+    {% else %}
+        <h1>你尚未登录，只能访问公开内容！</h1>
+    {% endif %}
+{% endblock %}

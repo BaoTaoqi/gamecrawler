@@ -1,0 +1,11 @@
+{% extends 'public/base.html' %}
+{% block title %}游戏详情{% endblock %}
+{% block content %}
+    {% if request.session.is_login %}
+        <a href="{% url 'GameCrawler:subscribe_management' request.session.user_openid %}">管理你的游戏订阅</a>
+    {% elif request.session.wx_is_login %}
+        <a href="{% url 'GameCrawler:subscribe_management' request.session.wx_user_openid %}">管理你的游戏订阅</a>
+    {% else %}
+        <h1>你尚未登录，只能访问公开内容！</h1>
+    {% endif %}
+{% endblock %}

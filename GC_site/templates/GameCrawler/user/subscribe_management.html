@@ -1,0 +1,11 @@
+{% extends 'public/base.html' %}
+{% block title %}游戏详情{% endblock %}
+{% block content %}
+    {% if request.session.is_login %}
+        <a href="{% url 'GameCrawler:steam_subscribe_list' request.session.user_openid %}">Steam</a>
+    {% elif request.session.wx_is_login %}
+        <a href="{% url 'GameCrawler:steam_subscribe_list' request.session.wx_user_openid %}">Steam</a>
+    {% else %}
+        <h1>你尚未登录，只能访问公开内容！</h1>
+    {% endif %}
+{% endblock %}

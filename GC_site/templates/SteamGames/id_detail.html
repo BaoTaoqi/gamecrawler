@@ -1,0 +1,24 @@
+{% extends 'public/base.html' %}
+{% block title %}游戏详情{% endblock %}
+{% block content %}
+    {% if request.session.is_login or request.session.wx_is_login %}
+        <h1 class="list-group-item-heading">OMG。找到了你想要的游戏和它的兄弟们。</h1>
+        {% if games %}
+            <ul>
+                {% for game in games %}
+                    {% for new_game in new_games %}
+                        {% if forloop.counter == forloop.parentloop.counter %}
+                            <li>
+                                <a href="{% url 'SteamGames:game_detail' new_game.ID new_game.GameName %}">{{ game.GameName }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>暂无游戏</p>
+        {% endif %}
+    {% else %}
+        <h1>你尚未登录，只能访问公开内容！</h1>
+    {% endif %}
+{% endblock %}

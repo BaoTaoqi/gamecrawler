@@ -1,0 +1,50 @@
+{% extends 'public/base.html' %}
+{% block title %}搜索{% endblock %}
+{% block content %}
+    {% if request.session.is_login or request.session.wx_is_login %}
+        <h1>搜索你想订阅的Steam游戏</h1>
+        <form action="{% url 'search:steam_search' %}" method="post">
+            {% csrf_token %}
+            <h2>输入文本</h2>
+            <div class="form-group">
+                {{ steam_search_form.text.label_tag }}
+                {{ steam_search_form.text }}
+            </div>
+            <button type="submit" class="btn btn-primary pull-right">提交</button>
+        </form>
+        {% if message %}
+            <div class="alert alert-warning">{{ message }}</div>
+        {% endif %}
+        {% if result %}
+            <h1>搜索结果</h1>
+            {% for game in result %}
+                <div class="media">
+                    <a href="{% url 'SteamGames:id_detail' game.ID %}" class="list-group-item active">
+                        <div class="media-body">
+                            {% if game.FinalPrice < game.LastPrice %}
+                                <h3 class="list-group-item-heading">降价{{ game.DiscountPct }}！！！</h3>
+                            {% endif %}
+                            <h4 class="list-group-item-heading">{{ game.GameName }}</h4>
+                            <p class="list-group-item-text">ID：{{ game.ID }}</p>
+                            {% if game.OriginalPrice == 'no original_price' %}
+                                <p class="list-group-item-text">原价：{{ game.FinalPrice }}</p>
+                            {% else %}
+                                <p class="list-group-item-text">原价：{{ game.OriginalPrice }}</p>
+                            {% endif %}
+
+                            {% if game.DiscountPct == 'no discount_pct' %}
+                                <p class="list-group-item-text">折扣：暂无新折扣</p>
+                            {% else %}
+                                <p class="list-group-item-text">折扣：{{ game.DiscountPct }}</p>
+                            {% endif %}
+                            <p class="list-group-item-text">现价：{{ game.FinalPrice }}</p>
+                            <p class="list-group-item-text">史低（自建站以来）：{{ game.LowestPrice }}</p>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% else %}
+        <h1>你尚未登录，只能访问公开内容！</h1>
+    {% endif %}
+{% endblock %}

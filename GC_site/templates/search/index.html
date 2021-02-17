@@ -1,0 +1,9 @@
+{% extends 'public/base.html' %}
+{% block title %}搜索{% endblock %}
+{% block content %}
+    {% if request.session.is_login or request.session.wx_is_login %}
+        <a href="{% url 'search:steam_search' %}">Steam游戏查询</a>
+    {% else %}
+        <h1>你尚未登录，只能访问公开内容！</h1>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'public/base.html' %}
+{% block title %}游戏详情{% endblock %}
+{% block content %}
+    {% if request.session.is_login or request.session.wx_is_login %}
+        {% if notified_subscribed_steam_games %}
+            <h2>过期订阅（已通知）</h2>
+            <h4>***受网站流量限制，你的订阅在通知一次后默认关闭，如果您还想要继续订阅，请点击游戏详情页面续订！***</h4>
+            {% for game in notified_subscribed_steam_games %}
+                {% for name in notified_hashed_names %}
+                    {% if forloop.counter == forloop.parentloop.counter %}
+                        <div class="media">
+                            <a href="{% url 'SteamGames:game_detail' name.ID name.GameName %}"
+                               class="list-group-item active">
+                                <div class="media-body">
+                                    {% if game.FinalPrice < game.LastPrice %}
+                                        <h3 class="list-group-item-heading">降价{{ game.DiscountPct }}！！！</h3>
+                                    {% endif %}
+                                    <h4 class="list-group-item-heading">{{ game.GameName }}</h4>
+                                    <p class="list-group-item-text">ID：{{ game.ID }}</p>
+                                    {% if game.OriginalPrice == 'no original_price' %}
+                                        <p class="list-group-item-text">原价：{{ game.FinalPrice }}</p>
+                                    {% else %}
+                                        <p class="list-group-item-text">原价：{{ game.OriginalPrice }}</p>
+                                    {% endif %}
+                                    {% if game.DiscountPct == 'no discount_pct' %}
+                                        <p class="list-group-item-text">折扣：暂无新折扣</p>
+                                    {% else %}
+                                        <p class="list-group-item-text">折扣：{{ game.DiscountPct }}</p>
+                                    {% endif %}
+                                    <p class="list-group-item-text">现价：{{ game.FinalPrice }}</p>
+                                    <p class="list-group-item-text">史低（自建站以来）：{{ game.LowestPrice }}</p>
+                                </div>
+                            </a>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        {% else %}
+            <h2>暂无过期订阅</h2>
+        {% endif %}
+        {% if not_notified_subscribed_steam_games %}
+            <h2>未过期订阅（未通知）</h2>
+            {% for game in not_notified_subscribed_steam_games %}
+                {% for name in not_notified_hashed_names %}
+                    {% if forloop.counter == forloop.parentloop.counter %}
+                        <div class="media">
+                            <a href="{% url 'SteamGames:game_detail' name.ID name.GameName %}"
+                               class="list-group-item active">
+                                <div class="media-body">
+                                    <h4 class="list-group-item-heading">{{ game.GameName }}</h4>
+                                    <p class="list-group-item-text">ID：{{ game.ID }}</p>
+                                    {% if game.OriginalPrice == 'no original_price' %}
+                                        <p class="list-group-item-text">原价：{{ game.FinalPrice }}</p>
+                                    {% else %}
+                                        <p class="list-group-item-text">原价：{{ game.OriginalPrice }}</p>
+                                    {% endif %}
+                                    {% if game.DiscountPct == 'no discount_pct' %}
+                                        <p class="list-group-item-text">折扣：暂无新折扣</p>
+                                    {% else %}
+                                        <p class="list-group-item-text">折扣：{{ game.DiscountPct }}</p>
+                                    {% endif %}
+                                    <p class="list-group-item-text">现价：{{ game.FinalPrice }}</p>
+                                    <p class="list-group-item-text">史低（自建站以来）：{{ game.LowestPrice }}</p>
+                                </div>
+                            </a>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        {% else %}
+            <h2>暂无未过期订阅</h2>
+        {% endif %}
+    {% else %}
+        <h1>你尚未登录，只能访问公开内容！</h1>
+    {% endif %}
+{% endblock %}
